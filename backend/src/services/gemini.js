@@ -1,3 +1,17 @@
+/**
+ * Gemini API service layer.
+ *
+ * Key design decisions:
+ * 1. JSON mode (`responseMimeType: "application/json"`) forces structured output
+ *    without brittle regex parsing of markdown code blocks.
+ * 2. Zod schemas validate EVERY response before it reaches the route handler.
+ *    If the model returns an unexpected shape (e.g., missing correctOptionId),
+ *    we surface a typed "schema_mismatch" error rather than passing bad data.
+ * 3. stripJsonFences() handles the common case where the model wraps its JSON
+ *    in ```json ... ``` despite the JSON mime type being set.
+ * 4. Temperature 0.4 keeps answers factually grounded while allowing variety.
+ */
+
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { z } from 'zod';
 
