@@ -38,12 +38,11 @@ Open `http://localhost:5173` in your browser.
 
 ```
 study-assistant/
-├── frontend/          # Vite + React + TypeScript
+├── frontend/          # Vite + React + JavaScript (JSX)
 │   ├── src/
 │   │   ├── components/    # Flashcard, Quiz, UI components
-│   │   ├── hooks/         # useStudySession, useGenerateContent
-│   │   ├── types/         # Shared TypeScript types
-│   │   └── utils/         # Schema validation (Zod), API client
+│   │   ├── hooks/         # useQuizSession, useGenerate
+│   │   └── utils/         # API client, LocalStorage
 │   └── ...
 └── backend/           # Node + Express
     ├── src/
