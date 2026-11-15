@@ -1,12 +1,4 @@
-import type { AppError } from '../types';
-
-interface ErrorStateProps {
-  error: AppError;
-  onRetry: () => void;
-  onReset: () => void;
-}
-
-const ERROR_ICONS: Record<AppError['type'], string> = {
+const ERROR_ICONS = {
   network: '🔌',
   rate_limit: '⏳',
   validation: '🤔',
@@ -14,7 +6,7 @@ const ERROR_ICONS: Record<AppError['type'], string> = {
   unknown: '😕',
 };
 
-const ERROR_TITLES: Record<AppError['type'], string> = {
+const ERROR_TITLES = {
   network: 'Connection Error',
   rate_limit: 'Slow Down!',
   validation: 'Unexpected Response',
@@ -22,11 +14,11 @@ const ERROR_TITLES: Record<AppError['type'], string> = {
   unknown: 'Something Went Wrong',
 };
 
-export function ErrorState({ error, onRetry, onReset }: ErrorStateProps) {
+export function ErrorState({ error, onRetry, onReset }) {
   return (
     <div className="error-state">
-      <div className="error-state__icon">{ERROR_ICONS[error.type]}</div>
-      <h3 className="error-state__title">{ERROR_TITLES[error.type]}</h3>
+      <div className="error-state__icon">{ERROR_ICONS[error.type] || ERROR_ICONS.unknown}</div>
+      <h3 className="error-state__title">{ERROR_TITLES[error.type] || ERROR_TITLES.unknown}</h3>
       <p className="error-state__message">{error.message}</p>
 
       {error.type === 'rate_limit' && (

@@ -1,25 +1,16 @@
 import { useState, useRef, useCallback } from 'react';
-import type { Mode, AppStatus, AppError, GenerateResult } from '../types';
 import { generateContent } from '../utils/api';
 import { saveSession } from '../utils/storage';
 
-interface UseGenerateReturn {
-  status: AppStatus;
-  result: GenerateResult | null;
-  error: AppError | null;
-  generate: (mode: Mode, topic: string, notes?: string) => Promise<void>;
-  reset: () => void;
-}
-
-export function useGenerate(): UseGenerateReturn {
-  const [status, setStatus] = useState<AppStatus>('idle');
-  const [result, setResult] = useState<GenerateResult | null>(null);
-  const [error, setError] = useState<AppError | null>(null);
+export function useGenerate() {
+  const [status, setStatus] = useState('idle');
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
 
   // AbortController ref — cancel any in-flight request on re-submit
-  const abortRef = useRef<AbortController | null>(null);
+  const abortRef = useRef(null);
 
-  const generate = useCallback(async (mode: Mode, topic: string, notes?: string) => {
+  const generate = useCallback(async (mode, topic, notes) => {
     // Cancel previous in-flight request (stale response prevention)
     if (abortRef.current) {
       abortRef.current.abort();
@@ -34,7 +25,7 @@ export function useGenerate(): UseGenerateReturn {
 
     try {
       const data = await generateContent({ mode, topic, notes, signal: controller.signal });
-      
+
       // Only update state if this request wasn't superseded
       if (!controller.signal.aborted) {
         setResult(data);
@@ -42,13 +33,13 @@ export function useGenerate(): UseGenerateReturn {
         // Persist to localStorage
         saveSession({ mode, topic, data: data.data });
       }
-    } catch (err: unknown) {
+    } catch (err) {
       // Ignore aborted requests — a newer one is in flight
       if (err instanceof DOMException && err.name === 'AbortError') {
         return;
       }
       if (!controller.signal.aborted) {
-        const appError = (err as AppError) ?? {
+        const appError = err || {
           type: 'unknown',
           message: 'Something went wrong. Please try again.',
         };

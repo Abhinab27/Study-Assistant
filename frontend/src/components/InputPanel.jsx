@@ -1,10 +1,4 @@
 import { useState } from 'react';
-import type { Mode } from '../types';
-
-interface InputPanelProps {
-  onGenerate: (mode: Mode, topic: string, notes?: string) => void;
-  isLoading: boolean;
-}
 
 const SUGGESTIONS = [
   'Photosynthesis',
@@ -15,18 +9,18 @@ const SUGGESTIONS = [
   'The Water Cycle',
 ];
 
-export function InputPanel({ onGenerate, isLoading }: InputPanelProps) {
-  const [mode, setMode] = useState<Mode>('flashcards');
+export function InputPanel({ onGenerate, isLoading }) {
+  const [mode, setMode] = useState('flashcards');
   const [topic, setTopic] = useState('');
   const [notes, setNotes] = useState('');
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e) {
     e.preventDefault();
     if (!topic.trim()) return;
     onGenerate(mode, topic.trim(), notes.trim() || undefined);
   }
 
-  function useSuggestion(s: string) {
+  function useSuggestion(s) {
     setTopic(s);
   }
 

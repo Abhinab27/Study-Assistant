@@ -1,19 +1,7 @@
 import { useState, useCallback } from 'react';
-import type { Quiz, QuizAnswer } from '../types';
 
-interface UseQuizSessionReturn {
-  answers: QuizAnswer[];
-  currentIndex: number;
-  submitAnswer: (optionId: string) => void;
-  goNext: () => void;
-  reset: () => void;
-  isComplete: boolean;
-  score: number;
-  wrongQuestions: Quiz['questions'];
-}
-
-export function useQuizSession(quiz: Quiz): UseQuizSessionReturn {
-  const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+export function useQuizSession(quiz) {
+  const [answers, setAnswers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const isComplete = answers.length === quiz.questions.length;
@@ -24,7 +12,7 @@ export function useQuizSession(quiz: Quiz): UseQuizSessionReturn {
     (q) => answers.find((a) => a.questionId === q.id && !a.isCorrect)
   );
 
-  const submitAnswer = useCallback((optionId: string) => {
+  const submitAnswer = useCallback((optionId) => {
     const q = quiz.questions[currentIndex];
     if (!q) return;
     // Guard: don't double-submit

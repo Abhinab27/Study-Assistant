@@ -1,19 +1,9 @@
-import type { FlashcardDeck, Quiz } from '../types';
-
 const STORAGE_KEY = 'study_assistant_sessions';
 
-export interface SavedSession {
-  id: string;
-  savedAt: string;
-  mode: 'flashcards' | 'quiz';
-  topic: string;
-  data: FlashcardDeck | Quiz;
-}
-
-export function saveSession(session: Omit<SavedSession, 'id' | 'savedAt'>): void {
+export function saveSession(session) {
   try {
     const existing = getSessions();
-    const newSession: SavedSession = {
+    const newSession = {
       ...session,
       id: `session_${Date.now()}`,
       savedAt: new Date().toISOString(),
@@ -26,16 +16,16 @@ export function saveSession(session: Omit<SavedSession, 'id' | 'savedAt'>): void
   }
 }
 
-export function getSessions(): SavedSession[] {
+export function getSessions() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as SavedSession[]) : [];
+    return raw ? JSON.parse(raw) : [];
   } catch {
     return [];
   }
 }
 
-export function clearSessions(): void {
+export function clearSessions() {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch {

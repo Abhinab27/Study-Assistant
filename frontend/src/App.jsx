@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import type { Mode } from './types';
-import type { FlashcardDeck, Quiz } from './types';
 import { useGenerate } from './hooks/useGenerate';
 import { InputPanel } from './components/InputPanel';
 import { FlashcardView } from './components/FlashcardView';
@@ -10,9 +8,9 @@ import { ErrorState } from './components/ErrorState';
 
 export default function App() {
   const { status, result, error, generate, reset } = useGenerate();
-  const [lastRequest, setLastRequest] = useState<{ mode: Mode; topic: string; notes?: string } | null>(null);
+  const [lastRequest, setLastRequest] = useState(null);
 
-  function handleGenerate(mode: Mode, topic: string, notes?: string) {
+  function handleGenerate(mode, topic, notes) {
     setLastRequest({ mode, topic, notes });
     generate(mode, topic, notes);
   }
@@ -65,9 +63,9 @@ export default function App() {
             </div>
             <div className="content-area__main">
               {result.mode === 'flashcards' ? (
-                <FlashcardView deck={result.data as FlashcardDeck} onReset={reset} />
+                <FlashcardView deck={result.data} onReset={reset} />
               ) : (
-                <QuizView quiz={result.data as Quiz} onReset={reset} />
+                <QuizView quiz={result.data} onReset={reset} />
               )}
             </div>
           </div>

@@ -1,19 +1,4 @@
 import { useState, useCallback } from 'react';
-import type { Quiz, QuizQuestion, QuizAnswer, QuizPhase } from '../types';
-
-interface QuizViewProps {
-  quiz: Quiz;
-  onReset: () => void;
-}
-
-interface QuestionCardProps {
-  question: QuizQuestion;
-  questionNumber: number;
-  total: number;
-  onAnswer: (optionId: string) => void;
-  lockedAnswer: QuizAnswer | null; // null = not yet answered
-  isRetest?: boolean;
-}
 
 function QuestionCard({
   question,
@@ -22,7 +7,7 @@ function QuestionCard({
   onAnswer,
   lockedAnswer,
   isRetest = false,
-}: QuestionCardProps) {
+}) {
   const isAnswered = lockedAnswer !== null;
 
   return (
@@ -82,12 +67,6 @@ function ScoreScreen({
   wrongQuestions,
   onRetest,
   onReset,
-}: {
-  quiz: Quiz;
-  answers: QuizAnswer[];
-  wrongQuestions: QuizQuestion[];
-  onRetest: () => void;
-  onReset: () => void;
 }) {
   const score = answers.filter((a) => a.isCorrect).length;
   const pct = Math.round((score / quiz.questions.length) * 100);
@@ -129,20 +108,20 @@ function ScoreScreen({
   );
 }
 
-export function QuizView({ quiz, onReset }: QuizViewProps) {
-  const [phase, setPhase] = useState<QuizPhase>('answering');
-  const [answers, setAnswers] = useState<QuizAnswer[]>([]);
+export function QuizView({ quiz, onReset }) {
+  const [phase, setPhase] = useState('answering');
+  const [answers, setAnswers] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [retestQuestions, setRetestQuestions] = useState<QuizQuestion[]>([]);
-  const [retestAnswers, setRetestAnswers] = useState<QuizAnswer[]>([]);
+  const [retestQuestions, setRetestQuestions] = useState([]);
+  const [retestAnswers, setRetestAnswers] = useState([]);
 
   const activeQuestions = phase === 'retest' ? retestQuestions : quiz.questions;
   const activeAnswers = phase === 'retest' ? retestAnswers : answers;
 
-  const handleAnswer = useCallback((optionId: string) => {
+  const handleAnswer = useCallback((optionId) => {
     const q = activeQuestions[currentIndex];
     const isCorrect = optionId === q.correctOptionId;
-    const answer: QuizAnswer = { questionId: q.id, selectedOptionId: optionId, isCorrect };
+    const answer = { questionId: q.id, selectedOptionId: optionId, isCorrect };
 
     if (phase === 'retest') {
       setRetestAnswers((prev) => [...prev, answer]);

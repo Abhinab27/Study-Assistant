@@ -1,7 +1,3 @@
-interface LoadingStateProps {
-  mode: 'flashcards' | 'quiz';
-}
-
 const MESSAGES = {
   flashcards: [
     'Synthesizing key concepts…',
@@ -15,7 +11,7 @@ const MESSAGES = {
   ],
 };
 
-export function LoadingState({ mode }: LoadingStateProps) {
+export function LoadingState({ mode }) {
   const msgs = MESSAGES[mode];
   const msg = msgs[Math.floor(Date.now() / 1000) % msgs.length];
 

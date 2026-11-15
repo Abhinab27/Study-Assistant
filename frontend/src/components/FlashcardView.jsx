@@ -1,12 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { FlashcardDeck, Flashcard } from '../types';
 
-interface FlashcardViewProps {
-  deck: FlashcardDeck;
-  onReset: () => void;
-}
-
-function FlashcardItem({ card, index, total }: { card: Flashcard; index: number; total: number }) {
+function FlashcardItem({ card, index, total }) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
@@ -63,7 +57,7 @@ function FlashcardItem({ card, index, total }: { card: Flashcard; index: number;
   );
 }
 
-export function FlashcardView({ deck, onReset }: FlashcardViewProps) {
+export function FlashcardView({ deck, onReset }) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const goNext = useCallback(() => {
@@ -76,7 +70,7 @@ export function FlashcardView({ deck, onReset }: FlashcardViewProps) {
 
   // Keyboard navigation
   useEffect(() => {
-    function onKey(e: KeyboardEvent) {
+    function onKey(e) {
       if (e.key === 'ArrowRight') goNext();
       if (e.key === 'ArrowLeft') goPrev();
     }
