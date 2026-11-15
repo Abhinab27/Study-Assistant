@@ -1,0 +1,13 @@
+{
+  "name": "study-assistant",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-powered Study Assistant generating flashcards and quizzes",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && npm install --prefix frontend",
+    "start": "node run.js",
+    "dev": "node run.js",
+    "start:backend": "npm run dev --prefix backend",
+    "start:frontend": "npm run dev --prefix frontend"
+  }
+}
